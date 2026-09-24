@@ -281,3 +281,42 @@ footer{background:#020617;color:#64748b;padding:48px 0 20px}
   .network-card{padding:20px}
   .speed-number{font-size:48px}
 }
+
+/* How it works */
+.how-section{background:#fff}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.how-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px;padding:32px 26px;text-align:center;transition:transform .3s,box-shadow .3s}
+.how-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(15,23,42,.08)}
+.how-num{width:48px;height:48px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#6366f1,#4f46e5);color:#fff;font-weight:800;font-size:18px;box-shadow:0 6px 20px rgba(99,102,241,.3)}
+.how-card h3{font-size:17px;font-weight:700;margin-bottom:8px;color:#0f172a}
+.how-card p{font-size:13.5px;color:#64748b;line-height:1.55}
+
+/* Why us */
+.why-section{background:linear-gradient(180deg,#f8fafc 0%,#f1f5f9 100%)}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.why-card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:26px 22px;transition:transform .3s,box-shadow .3s}
+.why-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(15,23,42,.08)}
+.why-icon{font-size:26px;margin-bottom:12px}
+.why-card h3{font-size:16px;font-weight:700;margin-bottom:6px;color:#0f172a}
+.why-card p{font-size:13px;color:#64748b;line-height:1.55}
+
+/* Testimonials */
+.testimonials-section{background:#fff}
+.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.testimonial-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:28px 24px;margin:0;transition:transform .3s,box-shadow .3s}
+.testimonial-card:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(15,23,42,.07)}
+.testimonial-card p{font-size:14.5px;color:#334155;line-height:1.6;font-style:italic;margin-bottom:16px}
+.testimonial-card footer{font-size:12.5px;color:#64748b;font-weight:600;font-style:normal}
+
+/* CTA band */
+.cta-band{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#312e81 100%);color:#fff;padding:64px 0}
+.cta-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.cta-inner h2{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+.cta-inner p{color:#94a3b8;font-size:15px;max-width:420px}
+.cta-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+@media(max-width:900px){
+  .how-grid,.why-grid,.testimonial-grid{grid-template-columns:1fr}
+  .cta-inner{flex-direction:column;text-align:center}
+  .cta-actions{justify-content:center}
+}

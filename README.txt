@@ -15,7 +15,7 @@ Public marketing website for:
 Fibre (Excom Streaming Services)
 - Basic       : UGX 50,000 / month  – up to 30 Mbps
 - Chiva       : UGX 75,000 / month  – up to 60 Mbps
-- Chaallenger : UGX 130,000 / month – up to 100 Mbps
+- Challenger : UGX 130,000 / month – up to 100 Mbps
 
 Hotspot (Denop Hostel WiFi)
 - 24 Hours : UGX 1,000
