@@ -51,7 +51,7 @@ document.getElementById("contactForm").addEventListener("submit", function (e) {
 
 // scroll reveal
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
-document.querySelectorAll(".plan,.hot-card,.why-card,.pain-card,.how-card,.testimonial-card,.choice-card,.voucher-card,.stats-grid>div").forEach(el => { el.classList.add("reveal"); io.observe(el); });
+document.querySelectorAll(".plan,.hot-card,.why-card,.pain-card,.how-card,.testimonial-card,.choice-card,.voucher-card,.stats-grid>div,.work-grid figure").forEach(el => { el.classList.add("reveal"); io.observe(el); });
 
 // hero speed counter
 const sp = document.querySelector("[data-count]");

@@ -85,3 +85,6 @@ footer{background:var(--bg);color:#9fb2d0;padding:60px 0 0}.footer-grid{display:
 .menu-btn{display:block}.nav-cta{display:none}.nav-links{display:none;position:absolute;top:70px;left:0;right:0;flex-direction:column;background:var(--bg);padding:20px 5%;border-bottom:1px solid var(--line)}.nav.mobile-open .nav-links{display:flex}}
 @media(max-width:520px){.pain-grid{grid-template-columns:1fr}.float-wa-text{display:none}.float-wa{padding:16px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+.work-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}.work-grid figure{background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);transition:.3s}.work-grid figure:hover{transform:translateY(-6px)}
+.work-grid img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.work-grid figcaption{padding:18px 22px;color:var(--mut);font-size:.93rem}.work-grid figcaption b{display:block;color:var(--ink);font:700 1.15rem "Space Grotesk"}
+@media(max-width:700px){.work-grid{grid-template-columns:1fr}}
