@@ -48,3 +48,14 @@ document.getElementById("contactForm").addEventListener("submit", function (e) {
   const text = `Hello Denop Systems,%0A%0AMy name is ${encodeURIComponent(name)}.%0APhone: ${encodeURIComponent(phone)}%0ALocation: ${encodeURIComponent(location || "Not provided")}%0AService: ${encodeURIComponent(service)}%0AMessage: ${encodeURIComponent(message || "I would like more information.")}`;
   window.open(`https://wa.me/${whatsappNumber}?text=${text}`, "_blank");
 });
+
+// scroll reveal
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+document.querySelectorAll(".plan,.hot-card,.why-card,.pain-card,.how-card,.testimonial-card,.choice-card,.voucher-card,.stats-grid>div").forEach(el => { el.classList.add("reveal"); io.observe(el); });
+
+// hero speed counter
+const sp = document.querySelector("[data-count]");
+if (sp && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const t = +sp.dataset.count; let n = 0;
+  const id = setInterval(() => { n += Math.ceil((t - n) / 8); sp.textContent = n; if (n >= t) clearInterval(id); }, 45);
+}
