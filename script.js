@@ -49,10 +49,14 @@ document.getElementById("contactForm").addEventListener("submit", function (e) {
   window.open(`https://wa.me/${whatsappNumber}?text=${text}`, "_blank");
 });
 
+// photos: use real photo images/<name>.jpg if present, else illustration fallback
+document.querySelectorAll("img[data-n]").forEach(im => {
+  im.onerror = () => { im.onerror = null; im.src = `images/${im.dataset.fb}.svg`; };
+  im.src = `images/${im.dataset.n}.jpg`;
+});
 // scroll reveal
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
-document.querySelectorAll(".plan,.hot-card,.why-card,.pain-card,.how-card,.testimonial-card,.choice-card,.voucher-card,.stats-grid>div,.work-grid figure").forEach(el => { el.classList.add("reveal"); io.observe(el); });
-
+document.querySelectorAll("[data-r]").forEach(el => io.observe(el));
 // hero speed counter
 const sp = document.querySelector("[data-count]");
 if (sp && !matchMedia("(prefers-reduced-motion: reduce)").matches) {

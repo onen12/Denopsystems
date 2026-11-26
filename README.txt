@@ -23,7 +23,7 @@ Hotspot (Denop Hostel WiFi)
 - 1 Month  : UGX 20,000
 
 ## Design
-Refreshed: dark-tech hero, ticker, "Sound familiar?" section, animated cards.
+Fun neo-brutalist makeover. Drop real photos in images/ named pole.jpg, splice.jpg, home.jpg, hotspot.jpg — they replace the illustrations automatically.
 
 ## Fibre Coverage (Now available)
 Kabalagala • Kansanga • Muyenga • Kiwafu • Luwafu • Kitalanga • Soya • Bunga • Kiwempe
