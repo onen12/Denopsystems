@@ -45,6 +45,7 @@ async function api(req,url,body,res){
  if(m==='POST'&&p==='change-password'){if(!chk(u,String(body.current||'')))throw new E(400,'Current password is wrong');const n=str(body.password,100,8,'New password (min 8 chars)');
   if(n===body.current||['12345678','password','123456789','11111111'].includes(n))throw new E(400,'Choose a stronger, different password');Object.assign(u,mk(n));u.mustChange=false;save();return pub(u)}
  if(u.mustChange)throw new E(403,'Please change your password first');
+ if(m==='PATCH'&&p==='profile'){u.name=str(body.name,80,2,'Name');u.phone=phone(body.phone);save();return pub(u)}
  // ---------- MARKETER (own clients + own money only) ----------
  if(p==='m/summary'){need(u,'marketer');return{...money(u.id),rate:RATE,packages:PK,
   clients:db.clients.filter(c=>c.marketerId===u.id).map(c=>({id:c.id,name:c.name,package:c.package,commission:c.commission,createdAt:c.createdAt,installed:db.jobs.some(j=>j.clientId===c.id&&j.status==='done')})).reverse(),
@@ -82,7 +83,7 @@ async function api(req,url,body,res){
   if(!['paid','rejected'].includes(body.status))throw new E(400,'Invalid status');w.status=body.status;w.resolvedAt=Date.now();save();return{ok:1}}
  throw new E(404,'Not found')}
 
-const STATIC={'/':'index.html','/index.html':'index.html','/styles.css':'styles.css','/script.js':'script.js','/portal':'portal.html','/portal.html':'portal.html','/portal.css':'portal.css','/portal.js':'portal.js'};
+const STATIC={'/':'index.html','/index.html':'index.html','/styles.css':'styles.css','/script.js':'script.js','/portal':'portal.html','/portal.html':'portal.html','/portal.css':'portal.css','/portal.js':'portal.js','/data.js':'data.js'};
 const MIME={html:'text/html; charset=utf-8',css:'text/css',js:'text/javascript',svg:'image/svg+xml',jpg:'image/jpeg',png:'image/png',webp:'image/webp'};
 const SEC={'X-Content-Type-Options':'nosniff','X-Frame-Options':'DENY','Referrer-Policy':'same-origin'};
 http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://x');for(const k in SEC)res.setHeader(k,SEC[k]);
@@ -91,6 +92,6 @@ http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://x');for
   const out=await api(req,url,body,res);if(res.writableEnded)return;res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(out))}
  let f=STATIC[url.pathname];if(!f&&/^\/images\/[\w-]+\.(svg|jpg|png|webp)$/.test(url.pathname))f=url.pathname.slice(1);
  if(!f||!fs.existsSync(path.join(__dirname,f))){res.writeHead(404);return res.end('Not found')}
- if(f.startsWith('portal'))res.setHeader('Content-Security-Policy',"default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:");
+ if((f.startsWith('portal')||f==='data.js'))res.setHeader('Content-Security-Policy',"default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:");
  res.writeHead(200,{'Content-Type':MIME[f.split('.').pop()]});fs.createReadStream(path.join(__dirname,f)).pipe(res)}
 catch(e){const c=e instanceof E?e.c:500;if(c===500)console.error(e);res.writeHead(c,{'Content-Type':'application/json'});res.end(JSON.stringify({error:c===500?'Server error':e.message}))}}).listen(PORT,()=>console.log('Denop running on :'+PORT));
