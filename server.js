@@ -91,6 +91,6 @@ http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://x');for
   const out=await api(req,url,body,res);if(res.writableEnded)return;res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify(out))}
  let f=STATIC[url.pathname];if(!f&&/^\/images\/[\w-]+\.(svg|jpg|png|webp)$/.test(url.pathname))f=url.pathname.slice(1);
  if(!f||!fs.existsSync(path.join(__dirname,f))){res.writeHead(404);return res.end('Not found')}
- if(f.startsWith('portal'))res.setHeader('Content-Security-Policy',"default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:");
+ if(f.startsWith('portal'))res.setHeader('Content-Security-Policy',"default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:");
  res.writeHead(200,{'Content-Type':MIME[f.split('.').pop()]});fs.createReadStream(path.join(__dirname,f)).pipe(res)}
 catch(e){const c=e instanceof E?e.c:500;if(c===500)console.error(e);res.writeHead(c,{'Content-Type':'application/json'});res.end(JSON.stringify({error:c===500?'Server error':e.message}))}}).listen(PORT,()=>console.log('Denop running on :'+PORT));
