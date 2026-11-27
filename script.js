@@ -63,3 +63,25 @@ if (sp && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
   const t = +sp.dataset.count; let n = 0;
   const id = setInterval(() => { n += Math.ceil((t - n) / 8); sp.textContent = n; if (n >= t) clearInterval(id); }, 45);
 }
+
+// rotating hero word
+const words = ["just works.", "streams 4K.", "powers study.", "keeps up."], rot = document.getElementById("rot");
+if (rot && !matchMedia("(prefers-reduced-motion: reduce)").matches) { let w = 0;
+  setInterval(() => { rot.classList.add("out"); setTimeout(() => { w = (w + 1) % words.length; rot.textContent = words[w]; rot.classList.remove("out"); }, 450); }, 2800); }
+
+// plan finder
+const dev = document.getElementById("dev");
+if (dev) {
+  const plans = [["Basic", 30, "50,000 UGX / month", "Perfect for browsing, study and light streaming."], ["Chiva", 60, "75,000 UGX / month", "Great for 4K and busy households."], ["Challenger", 100, "130,000 UGX / month", "Whole-house power for work and gaming."]];
+  let f = 1.5;
+  const calc = () => {
+    const need = +dev.value * f; const p = need <= 25 ? plans[0] : need <= 50 ? plans[1] : plans[2];
+    document.getElementById("devOut").textContent = dev.value;
+    document.getElementById("gPlan").textContent = p[0]; document.getElementById("gSpeed").textContent = p[1];
+    document.getElementById("gNote").textContent = p[3]; document.getElementById("gBar").style.width = p[1] + "%";
+    document.getElementById("gBtn").onclick = () => prefillFibre(p[0], p[2], p[1] + " Mbps");
+  };
+  dev.oninput = calc;
+  document.querySelectorAll("#chips .chip").forEach(c => c.onclick = () => { document.querySelectorAll("#chips .chip").forEach(x => x.classList.remove("on")); c.classList.add("on"); f = +c.dataset.f; calc(); });
+  calc();
+}

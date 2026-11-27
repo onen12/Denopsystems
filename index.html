@@ -3,65 +3,75 @@
 <meta name="description" content="Denop Systems — home fibre (Excom) and cheap hotspot WiFi (Denop Hostel WiFi) in south Kampala.">
 <meta name="theme-color" content="#14052e"><title>Denop Systems | Fibre & Hotspot WiFi, Kampala</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css"></head><body>
 <header class="header" id="top"><nav class="nav container">
 <a class="brand" href="#top"><span class="brand-mark">D</span>DENOP<em>SYSTEMS</em></a>
-<button class="menu-btn" aria-label="Menu" aria-expanded="false">☰</button>
-<div class="nav-links"><a href="#fibre">Fibre</a><a href="#hotspot">Hotspot</a><a href="#work">Our work</a><a href="#coverage">Areas</a><a href="#contact">Contact</a></div>
+<button class="menu-btn" aria-label="Menu" aria-expanded="false"></button>
+<div class="nav-links"><a href="#finder">Find plan</a><a href="#fibre">Fibre</a><a href="#hotspot">Hotspot</a><a href="#work">Our work</a><a href="#coverage">Areas</a><a href="#contact">Contact</a></div>
 <a class="nav-cta" href="#contact">Get connected</a></nav></header>
 <main>
 <section class="hero" id="home"><div class="container hero-grid">
 <div class="hero-copy">
 <div class="eyebrow"><span class="pulse"></span> KAMPALA SOUTH</div>
-<h1>Buffering?<br><span>Never heard of her.</span></h1>
-<p class="hero-text">Home fibre. Pocket-friendly WiFi. Zero drama. 😎</p>
-<div class="hero-actions"><a class="btn btn-primary" href="#fibre">Fibre plans 🚀</a><a class="btn btn-ghost" href="#hotspot">Hotspot from 1,000</a></div>
+<h1>Internet that<br><span id="rot" class="rot">just works.</span></h1>
+<p class="hero-text">Reliable home fibre and affordable hotspot WiFi across south Kampala.</p>
+<div class="hero-actions"><a class="btn btn-primary" href="#fibre">Explore fibre plans</a><a class="btn btn-ghost" href="#hotspot">Hotspot from 1,000</a></div>
 <div class="trust-row"><div><strong><b data-count="100">100</b> Mbps</strong><small>top speed</small></div><div><strong>1,000</strong><small>UGX / day WiFi</small></div><div><strong>14+</strong><small>areas covered</small></div></div>
 </div>
 <div class="collage">
 <figure class="c1"><img data-n="pole" data-fb="pole-install" alt="Technician installing fibre on a pole"></figure>
 <figure class="c2"><img data-n="home" data-fb="home-router" alt="Neat home fibre install with Excom router"></figure>
-<span class="sticker s1">100 Mbps ⚡</span><span class="sticker s2">UGX 1,000 📶</span>
+<span class="sticker s1">Up to 100 Mbps</span><span class="sticker s2">WiFi from UGX 1,000</span>
 </div></div></section>
 
-<div class="ticker" aria-hidden="true"><div><span>📺 Stream</span><span>🎮 Game</span><span>🎓 Study</span><span>💻 Work</span><span>📱 Scroll</span><span>🏠 Fibre</span><span>📶 Hotspot</span><span>📺 Stream</span><span>🎮 Game</span><span>🎓 Study</span><span>💻 Work</span><span>📱 Scroll</span><span>🏠 Fibre</span><span>📶 Hotspot</span></div></div>
+<div class="ticker" aria-hidden="true"><div><span>Streaming</span><span>Gaming</span><span>Studying</span><span>Working</span><span>Fibre</span><span>Hotspot</span><span>Streaming</span><span>Gaming</span><span>Studying</span><span>Working</span><span>Fibre</span><span>Hotspot</span></div></div>
+
+<section class="section finder" id="finder"><div class="container finder-grid">
+<div><div class="eyebrow dark">PLAN FINDER</div><h2>Tell us your home.<br><em>We’ll pick the speed.</em></h2>
+<label class="fl">Devices at home: <b id="devOut">6</b><input type="range" id="dev" min="1" max="20" value="6"></label>
+<div class="fl">What do you do most?</div>
+<div class="chips" id="chips"><button class="chip on" data-f="1.5">Browse</button><button class="chip" data-f="4">Stream</button><button class="chip" data-f="5">Game</button><button class="chip" data-f="3">Work</button></div></div>
+<div class="gauge-card"><small>RECOMMENDED</small><div class="g-plan" id="gPlan">Chiva</div>
+<div class="g-speed"><b id="gSpeed">60</b> Mbps</div><div class="g-bar"><i id="gBar"></i></div>
+<small id="gNote">Great for 4K and busy households.</small><a href="#contact" class="btn btn-primary full" id="gBtn">Get this plan</a></div>
+</div></section>
 
 <section class="section" id="fibre"><div class="container">
-<div class="section-head"><div class="eyebrow dark">EXCOM FIBRE · HOME</div><h2>Pick your speed.</h2></div>
+<div class="section-head"><div class="eyebrow dark">EXCOM FIBRE · HOME</div><h2>Choose your speed.</h2></div>
 <div class="plans">
-<article class="plan" data-r><div class="plan-icon">🏠</div><h3>Basic</h3><div class="price">50,000 <small>UGX / mo</small></div><div class="speed">30 Mbps</div><ul><li>HD streaming</li><li>Work &amp; study</li></ul><a href="#contact" class="plan-btn" onclick="prefillFibre('Basic','50,000 UGX / month','30 Mbps')">Get Basic</a></article>
-<article class="plan featured" data-r><div class="popular">FAN FAVE 🔥</div><div class="plan-icon">⚡</div><h3>Chiva</h3><div class="price">75,000 <small>UGX / mo</small></div><div class="speed">60 Mbps</div><ul><li>4K &amp; gaming</li><li>Video calls</li></ul><a href="#contact" class="plan-btn" onclick="prefillFibre('Chiva','75,000 UGX / month','60 Mbps')">Get Chiva</a></article>
-<article class="plan" data-r><div class="plan-icon">🚀</div><h3>Challenger</h3><div class="price">130,000 <small>UGX / mo</small></div><div class="speed">100 Mbps</div><ul><li>Whole-house power</li><li>Business ready</li></ul><a href="#contact" class="plan-btn" onclick="prefillFibre('Challenger','130,000 UGX / month','100 Mbps')">Get Challenger</a></article>
+<article class="plan" data-r><h3>Basic</h3><div class="price">50,000 <small>UGX / mo</small></div><div class="speed">30 Mbps</div><ul><li>HD streaming</li><li>Work &amp; study</li></ul><a href="#contact" class="plan-btn" onclick="prefillFibre('Basic','50,000 UGX / month','30 Mbps')">Get Basic</a></article>
+<article class="plan featured" data-r><div class="popular">MOST POPULAR</div><h3>Chiva</h3><div class="price">75,000 <small>UGX / mo</small></div><div class="speed">60 Mbps</div><ul><li>4K &amp; gaming</li><li>Video calls</li></ul><a href="#contact" class="plan-btn" onclick="prefillFibre('Chiva','75,000 UGX / month','60 Mbps')">Get Chiva</a></article>
+<article class="plan" data-r><h3>Challenger</h3><div class="price">130,000 <small>UGX / mo</small></div><div class="speed">100 Mbps</div><ul><li>Whole-house power</li><li>Business ready</li></ul><a href="#contact" class="plan-btn" onclick="prefillFibre('Challenger','130,000 UGX / month','100 Mbps')">Get Challenger</a></article>
 </div></div></section>
 
 <section class="section work-section" id="work"><div class="container">
-<div class="section-head"><div class="eyebrow dark">OUR WORK</div><h2>Pole to living room. Done clean.</h2></div>
+<div class="section-head"><div class="eyebrow dark">OUR WORK</div><h2>From the pole to your living room.</h2></div>
 <div class="work-grid">
-<figure data-r><img data-n="pole" data-fb="pole-install" alt="Pole fibre installation" loading="lazy"><figcaption>🧗 Up the pole</figcaption></figure>
-<figure data-r><img data-n="splice" data-fb="splice" alt="Spliced fibre" loading="lazy"><figcaption>🔬 Spliced right</figcaption></figure>
-<figure data-r><img data-n="home" data-fb="home-router" alt="Home install with Excom router" loading="lazy"><figcaption>🏠 Neat at home</figcaption></figure>
-<figure data-r><img data-n="hotspot" data-fb="hotspot" alt="Hotspot routers" loading="lazy"><figcaption>📶 Hostel hotspots</figcaption></figure>
+<figure data-r><img data-n="pole" data-fb="pole-install" alt="Pole fibre installation" loading="lazy"><figcaption>Up the pole</figcaption></figure>
+<figure data-r><img data-n="splice" data-fb="splice" alt="Spliced fibre" loading="lazy"><figcaption>Spliced right</figcaption></figure>
+<figure data-r><img data-n="home" data-fb="home-router" alt="Home install with Excom router" loading="lazy"><figcaption>Neat at home</figcaption></figure>
+<figure data-r><img data-n="hotspot" data-fb="hotspot" alt="Hotspot routers" loading="lazy"><figcaption>Hostel hotspots</figcaption></figure>
 </div></div></section>
 
 <section class="section hotspot" id="hotspot"><div class="container">
 <div class="section-head"><div class="eyebrow dark">DENOP HOSTEL WIFI</div><h2>WiFi that fits your pocket.</h2></div>
 <div class="hotspot-grid">
-<article class="hot-card" data-r><span class="hot-icon">☀️</span><h3>24 Hours</h3><div class="hot-price">1,000 <small>UGX</small></div><button onclick="chooseHotspot('24 Hours','1,000 UGX')">Get access</button></article>
-<article class="hot-card featured-hot" data-r><span class="hot-badge">BEST VALUE</span><span class="hot-icon">🔥</span><h3>1 Week</h3><div class="hot-price">5,000 <small>UGX</small></div><button onclick="chooseHotspot('1 Week','5,000 UGX')">Get access</button></article>
-<article class="hot-card" data-r><span class="hot-icon">🌙</span><h3>1 Month</h3><div class="hot-price">20,000 <small>UGX</small></div><button onclick="chooseHotspot('1 Month','20,000 UGX')">Get access</button></article>
+<article class="hot-card" data-r><h3>24 Hours</h3><div class="hot-price">1,000 <small>UGX</small></div><button onclick="chooseHotspot('24 Hours','1,000 UGX')">Get access</button></article>
+<article class="hot-card featured-hot" data-r><span class="hot-badge">BEST VALUE</span><h3>1 Week</h3><div class="hot-price">5,000 <small>UGX</small></div><button onclick="chooseHotspot('1 Week','5,000 UGX')">Get access</button></article>
+<article class="hot-card" data-r><h3>1 Month</h3><div class="hot-price">20,000 <small>UGX</small></div><button onclick="chooseHotspot('1 Month','20,000 UGX')">Get access</button></article>
 </div>
-<div class="voucher-bar"><span>🎟️ Voucher?</span><a href="#contact" class="btn btn-ghost-dark" onclick="prefillVoucher('I have a voucher and need help connecting')">I have one</a><a href="#contact" class="btn btn-primary" onclick="prefillVoucher('I need to purchase a voucher')">Get one</a></div>
+<div class="voucher-bar"><span>Have a voucher?</span><a href="#contact" class="btn btn-ghost-dark" onclick="prefillVoucher('I have a voucher and need help connecting')">I have one</a><a href="#contact" class="btn btn-primary" onclick="prefillVoucher('I need to purchase a voucher')">Get one</a></div>
 </div></section>
 
 <section class="coverage" id="coverage"><div class="container">
-<div class="eyebrow">WE’RE IN YOUR HOOD 📍</div><h2>Fibre live in:</h2>
+<div class="eyebrow">COVERAGE</div><h2>Fibre live in:</h2>
 <div class="coverage-pills"><span>Kabalagala</span><span>Kansanga</span><span>Muyenga</span><span>Kiwafu</span><span>Luwafu</span><span>Kitalanga</span><span>Soya</span><span>Bunga</span><span>Kiwempe</span><span>Salaama Road</span><span>Munyonyo</span><span>Kibuli</span><span>Bukasa</span><span>Kizungu</span><span class="more">+ more soon</span></div>
 <a class="btn btn-primary" href="#contact" onclick="prefillFibreAvailability()">Is my area covered?</a>
 </div></section>
 
 <section class="section"><div class="container">
-<div class="section-head"><div class="eyebrow dark">LOVE NOTES</div><h2>Happy customers 💬</h2></div>
+<div class="section-head"><div class="eyebrow dark">TESTIMONIALS</div><h2>Loved around the neighbourhood.</h2></div>
 <div class="testimonial-grid">
 <blockquote class="testimonial-card" data-r><p>“Stable for streaming and work from home.”</p><footer>— Kansanga</footer></blockquote>
 <blockquote class="testimonial-card" data-r><p>“Weekly hotspot is perfect for our hostel.”</p><footer>— Muyenga</footer></blockquote>
@@ -75,14 +85,14 @@
 <details><summary>Are speeds guaranteed?</summary><p>Speeds are “up to” the plan maximum and can vary with network conditions and equipment.</p></details>
 </div></section>
 
-<section class="cta-band"><div class="container cta-inner"><h2>Ready to go online? 🚀</h2>
+<section class="cta-band"><div class="container cta-inner"><h2>Ready to get connected?</h2>
 <a class="btn btn-light" href="https://wa.me/256704682970" target="_blank" rel="noopener">WhatsApp us</a></div></section>
 
 <section class="contact section" id="contact"><div class="container contact-grid">
-<div><div class="eyebrow dark">SAY HI 👋</div><h2>Let’s connect you.</h2>
+<div><div class="eyebrow dark">GET IN TOUCH</div><h2>Let’s connect you.</h2>
 <div class="contact-details">
-<div><span>📞</span><div><b>Call / WhatsApp</b><small><a href="tel:+256704682970">0704 682 970</a> · <a href="tel:+256706500792">0706 500 792</a></small></div></div>
-<div><span>✉️</span><div><b>Email</b><small><a href="mailto:denopcomputers@gmail.com">denopcomputers@gmail.com</a></small></div></div>
+<div><span></span><div><b>Call / WhatsApp</b><small><a href="tel:+256704682970">0704 682 970</a> · <a href="tel:+256706500792">0706 500 792</a></small></div></div>
+<div><span></span><div><b>Email</b><small><a href="mailto:denopcomputers@gmail.com">denopcomputers@gmail.com</a></small></div></div>
 </div>
 <div class="direct-whatsapp"><a class="btn btn-primary" href="https://wa.me/256704682970" target="_blank" rel="noopener">WhatsApp 0704 682 970</a><a class="btn btn-ghost-dark" href="https://wa.me/256706500792" target="_blank" rel="noopener">WhatsApp 0706 500 792</a></div></div>
 <form id="contactForm" class="contact-form">
@@ -95,5 +105,5 @@
 </form></div></section>
 </main>
 <footer><div class="container footer-row"><a class="brand" href="#top"><span class="brand-mark">D</span>DENOP<em>SYSTEMS</em></a><span>Excom Fibre · Denop Hostel WiFi</span><span>© <span id="year"></span> Denop Systems</span></div></footer>
-<a class="float-wa" href="https://wa.me/256704682970" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬 <span class="float-wa-text">Chat</span></a>
+<a class="float-wa" href="https://wa.me/256704682970" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><span class="float-wa-text">Chat</span></a>
 <script src="script.js"></script></body></html>
