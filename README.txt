@@ -44,7 +44,7 @@ Alternatively use Netlify, Vercel, GitHub Pages or any static hosting.
 WhatsApp form submissions go to 0704 682 970 by default.
 
 == DISPATCH PORTAL ==
-Run:  ADMIN_EMAIL=you@x.com ADMIN_PASSWORD=StrongPass1 node server.js
+Run:  node server.js   (first admin: onenrogers@gmail.com / 12345678 — you are forced to change it at first login)
 Open: http://localhost:3000/portal   (public site: /)
 Roles: marketer (onboards clients, sees own earnings, requests withdrawals),
        installer (sees only assigned jobs, completes with 2 photos),

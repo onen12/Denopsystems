@@ -11,12 +11,12 @@ const SECRET=process.env.SESSION_SECRET||fs.readFileSync(SF,'utf8');
 const PK={Basic:50000,Chiva:75000,Challenger:130000},RATE=0.4,ROLES=['marketer','installer','admin'];
 const mk=p=>{const salt=crypto.randomBytes(16).toString('hex');return{salt,hash:crypto.scryptSync(p,salt,64).toString('hex')}};
 const chk=(u,p)=>crypto.timingSafeEqual(crypto.scryptSync(p,u.salt,64),Buffer.from(u.hash,'hex'));
-if(!db.users.some(u=>u.role==='admin')){const pw=process.env.ADMIN_PASSWORD||crypto.randomBytes(6).toString('hex'),em=(process.env.ADMIN_EMAIL||'admin@denop.local').toLowerCase();
- db.users.push({id:uid(),name:'Administrator',email:em,phone:'',role:'admin',active:true,...mk(pw)});save();console.log(`\n== First admin created ==\n   email: ${em}\n   password: ${pw}\n   (change it after login)\n`)}
+if(!db.users.some(u=>u.role==='admin')){const pw=process.env.ADMIN_PASSWORD||'12345678',em=(process.env.ADMIN_EMAIL||'onenrogers@gmail.com').toLowerCase();
+ db.users.push({id:uid(),name:'Administrator',email:em,phone:'',role:'admin',active:true,mustChange:!process.env.ADMIN_PASSWORD,...mk(pw)});save();console.log(`\n== First admin created: ${em} ==\n   ${process.env.ADMIN_PASSWORD?'Password from ADMIN_PASSWORD.':'Default password in use: you will be forced to change it at first login.'}\n`)}
 const sign=s=>crypto.createHmac('sha256',SECRET).update(s).digest('hex');
 const token=u=>{const b=`${u.id}.${Date.now()+12*3600e3}`;return`${b}.${sign(b)}`};
 const who=req=>{const m=/(?:^|; )s=([^;]+)/.exec(req.headers.cookie||'');if(!m)return;const[i,e,g]=m[1].split('.');if(!g||sign(`${i}.${e}`)!==g||+e<Date.now())return;const u=db.users.find(x=>x.id===i);return u&&u.active?u:undefined};
-const pub=u=>({id:u.id,name:u.name,email:u.email,phone:u.phone,role:u.role,active:u.active});
+const pub=u=>({id:u.id,name:u.name,email:u.email,phone:u.phone,role:u.role,active:u.active,mustChange:!!u.mustChange});
 const fails={};const limited=ip=>(fails[ip]||[]).filter(t=>t>Date.now()-9e5).length>=8;
 class E extends Error{constructor(c,m){super(m);this.c=c}}
 const str=(v,max,min=1,n='Field')=>{v=String(v??'').trim();if(v.length<min||v.length>max)throw new E(400,`${n} is required (max ${max} chars)`);return v};
@@ -42,6 +42,9 @@ async function api(req,url,body,res){
  if(m==='POST'&&p==='logout'){res.setHeader('Set-Cookie','s=; HttpOnly; Path=/; Max-Age=0');return{ok:1}}
  const u=who(req);if(!u)throw new E(401,'Please sign in');
  if(m==='GET'&&p==='me')return pub(u);
+ if(m==='POST'&&p==='change-password'){if(!chk(u,String(body.current||'')))throw new E(400,'Current password is wrong');const n=str(body.password,100,8,'New password (min 8 chars)');
+  if(n===body.current||['12345678','password','123456789','11111111'].includes(n))throw new E(400,'Choose a stronger, different password');Object.assign(u,mk(n));u.mustChange=false;save();return pub(u)}
+ if(u.mustChange)throw new E(403,'Please change your password first');
  // ---------- MARKETER (own clients + own money only) ----------
  if(p==='m/summary'){need(u,'marketer');return{...money(u.id),rate:RATE,packages:PK,
   clients:db.clients.filter(c=>c.marketerId===u.id).map(c=>({id:c.id,name:c.name,package:c.package,commission:c.commission,createdAt:c.createdAt,installed:db.jobs.some(j=>j.clientId===c.id&&j.status==='done')})).reverse(),
@@ -51,7 +54,7 @@ async function api(req,url,body,res){
   db.clients.push(c);newJob({clientId:c.id,clientName:c.name,phone:c.phone,location:c.location,pin:c.pin,package:pkg,source:'marketer'});save();return{ok:1,commission:c.commission}}
  if(m==='POST'&&p==='m/withdraw'){need(u,'marketer');const a=Math.floor(+body.amount),mo=money(u.id);
   if(!(a>=1000))throw new E(400,'Minimum withdrawal is UGX 1,000');if(a>mo.available)throw new E(400,'Amount exceeds your available balance');
-  db.withdrawals.push({id:uid(),marketerId:u.id,amount:a,status:'pending',createdAt:Date.now()});save();return{ok:1}}
+  db.withdrawals.push({id:uid(),marketerId:u.id,amount:a,payTo:phone(body.payTo),status:'pending',createdAt:Date.now()});save();return{ok:1}}
  // ---------- INSTALLER (only jobs assigned to them) ----------
  if(p==='i/jobs'){need(u,'installer');return db.jobs.filter(j=>j.installerId===u.id).map(({id,clientName,phone,location,pin,package:pk,status,notes,createdAt,completedAt,photos})=>({id,clientName,phone,location,pin,package:pk,status,notes,createdAt,completedAt,photos:photos.length})).reverse()}
  let x;if(m==='POST'&&(x=/^i\/jobs\/(\w+)\/(start|complete)$/.exec(p))){need(u,'installer');const j=db.jobs.find(j=>j.id===x[1]&&j.installerId===u.id);if(!j)throw new E(404,'Job not found');
@@ -67,10 +70,10 @@ async function api(req,url,body,res){
   clients:db.clients.map(c=>({...c,marketer:nm(c.marketerId)})).reverse(),jobs:db.jobs.map(j=>({...j,installer:nm(j.installerId)})).reverse(),
   withdrawals:db.withdrawals.map(w=>({...w,marketer:nm(w.marketerId)})).reverse(),packages:PK}}
  if(m==='POST'&&p==='a/users'){const role=String(body.role);if(!ROLES.includes(role))throw new E(400,'Invalid role');const pw=str(body.password,100,8,'Password (min 8 chars)'),em=email(body.email);
-  if(db.users.some(x=>x.email===em))throw new E(400,'Email already in use');db.users.push({id:uid(),name:str(body.name,80,2,'Name'),email:em,phone:phone(body.phone),role,active:true,...mk(pw)});save();return{ok:1}}
+  if(db.users.some(x=>x.email===em))throw new E(400,'Email already in use');db.users.push({id:uid(),name:str(body.name,80,2,'Name'),email:em,phone:phone(body.phone),role,active:true,mustChange:true,...mk(pw)});save();return{ok:1}}
  if(m==='PATCH'&&(x=/^a\/users\/(\w+)$/.exec(p))){const t=db.users.find(y=>y.id===x[1]);if(!t)throw new E(404,'No such user');
   if(typeof body.active==='boolean'){if(t.id===u.id)throw new E(400,"You can't deactivate yourself");t.active=body.active}
-  if(body.password)Object.assign(t,mk(str(body.password,100,8,'Password (min 8 chars)')));save();return{ok:1}}
+  if(body.password){Object.assign(t,mk(str(body.password,100,8,'Password (min 8 chars)')));t.mustChange=true}save();return{ok:1}}
  if(m==='POST'&&p==='a/jobs'){const pkg=String(body.package);if(!PK[pkg])throw new E(400,'Choose a package');const j=newJob({clientName:str(body.clientName,80,2,'Client name'),phone:phone(body.phone),location:str(body.location,160,2,'Location'),pin:pin(body.pin),package:pkg,source:'admin'});
   if(body.installerId){const i=db.users.find(y=>y.id===body.installerId&&y.role==='installer'&&y.active);if(!i)throw new E(400,'Invalid installer');j.installerId=i.id;j.status='assigned'}save();return{ok:1}}
  if(m==='PATCH'&&(x=/^a\/jobs\/(\w+)$/.exec(p))){const j=db.jobs.find(y=>y.id===x[1]);if(!j)throw new E(404,'No such job');if(j.status==='done')throw new E(400,'Completed jobs are locked');
