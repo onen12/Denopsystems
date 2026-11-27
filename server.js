@@ -4,6 +4,7 @@ const PORT=process.env.PORT||3000,DIR=process.env.DATA_DIR||path.join(__dirname,
 fs.mkdirSync(path.join(DIR,'uploads'),{recursive:true});
 const DBF=path.join(DIR,'db.json');
 const db=fs.existsSync(DBF)?JSON.parse(fs.readFileSync(DBF,'utf8')):{users:[],clients:[],jobs:[],withdrawals:[]};
+for(const c of db.clients)if(!c.commissionAt){const j=db.jobs.find(j=>j.clientId===c.id&&j.status==='done');if(j)c.commissionAt=j.completedAt}
 const save=()=>{fs.writeFileSync(DBF+'.tmp',JSON.stringify(db));fs.renameSync(DBF+'.tmp',DBF)};
 const uid=()=>crypto.randomBytes(6).toString('hex');
 const SF=path.join(DIR,'secret');if(!fs.existsSync(SF))fs.writeFileSync(SF,crypto.randomBytes(32).toString('hex'));
@@ -25,9 +26,9 @@ const email=v=>{v=str(v,120,3,'Email').toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s
 const pin=p=>{if(!p||p.lat==null)return null;const lat=+p.lat,lng=+p.lng;if(!(lat>=-90&&lat<=90&&lng>=-180&&lng<=180))throw new E(400,'Invalid location pin');return{lat,lng}};
 const need=(u,...r)=>{if(!r.includes(u.role))throw new E(403,'Not allowed')};
 const wd=id=>db.withdrawals.filter(w=>w.marketerId===id);
-const money=id=>{const earned=db.clients.filter(c=>c.marketerId===id).reduce((a,c)=>a+c.commission,0),w=wd(id),
+const money=id=>{const cs=db.clients.filter(c=>c.marketerId===id),earned=cs.filter(c=>c.commissionAt).reduce((a,c)=>a+c.commission,0),upcoming=cs.filter(c=>!c.commissionAt).reduce((a,c)=>a+c.commission,0),w=wd(id),
  paid=w.filter(x=>x.status==='paid').reduce((a,x)=>a+x.amount,0),pending=w.filter(x=>x.status==='pending').reduce((a,x)=>a+x.amount,0);
- return{earned,paid,pending,available:earned-paid-pending}};
+ return{earned,upcoming,paid,pending,available:earned-paid-pending}};
 const newJob=(o)=>{const j={id:uid(),clientId:null,installerId:null,status:'unassigned',photos:[],notes:'',createdAt:Date.now(),...o};db.jobs.push(j);return j};
 const MAGIC={jpg:b=>b[0]===0xFF&&b[1]===0xD8,png:b=>b[0]===0x89&&b[1]===0x50,webp:b=>b.slice(0,4).toString()==='RIFF'};
 function img(d){const m=/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/.exec(d||'');if(!m)throw new E(400,'Photos must be JPG, PNG or WEBP');
@@ -48,7 +49,7 @@ async function api(req,url,body,res){
  if(m==='PATCH'&&p==='profile'){u.name=str(body.name,80,2,'Name');u.phone=phone(body.phone);save();return pub(u)}
  // ---------- MARKETER (own clients + own money only) ----------
  if(p==='m/summary'){need(u,'marketer');return{...money(u.id),rate:RATE,packages:PK,
-  clients:db.clients.filter(c=>c.marketerId===u.id).map(c=>({id:c.id,name:c.name,package:c.package,commission:c.commission,createdAt:c.createdAt,installed:db.jobs.some(j=>j.clientId===c.id&&j.status==='done')})).reverse(),
+  clients:db.clients.filter(c=>c.marketerId===u.id).map(c=>({id:c.id,name:c.name,package:c.package,commission:c.commission,createdAt:c.createdAt,installed:!!c.commissionAt,credited:!!c.commissionAt})).reverse(),
   withdrawals:wd(u.id).slice().reverse()}}
  if(m==='POST'&&p==='m/clients'){need(u,'marketer');const pkg=String(body.package);if(!PK[pkg])throw new E(400,'Choose a package');
   const c={id:uid(),marketerId:u.id,name:str(body.name,80,2,'Name'),email:email(body.email),phone:phone(body.phone),location:str(body.location,160,2,'Location'),pin:pin(body.pin),package:pkg,price:PK[pkg],commission:Math.round(PK[pkg]*RATE),createdAt:Date.now()};
@@ -62,7 +63,9 @@ async function api(req,url,body,res){
   if(x[2]==='start'){if(j.status!=='assigned')throw new E(400,'Job cannot be started');j.status='in_progress';save();return{ok:1}}
   if(j.status==='done')throw new E(400,'Job already completed');if(!Array.isArray(body.photos)||body.photos.length!==2)throw new E(400,'Exactly 2 proof photos are required');
   const f=body.photos.map(img);j.photos=f.map((o,n)=>{const name=`${j.id}-${n}.${o.ext}`;fs.writeFileSync(path.join(DIR,'uploads',name),o.b);return name});
-  j.notes=String(body.notes||'').slice(0,500);j.status='done';j.completedAt=Date.now();save();return{ok:1}}
+  j.notes=String(body.notes||'').slice(0,500);j.status='done';j.completedAt=Date.now();
+  const cl=db.clients.find(c=>c.id===j.clientId);if(cl&&!cl.commissionAt)cl.commissionAt=j.completedAt; // commission is credited only now
+  save();return{ok:1}}
  if(m==='GET'&&(x=/^photo\/(\w+)\/([01])$/.exec(p))){const j=db.jobs.find(j=>j.id===x[1]);if(!j||!j.photos[+x[2]]||!(u.role==='admin'||j.installerId===u.id))throw new E(404,'Not found');
   const f=j.photos[+x[2]];res.writeHead(200,{'Content-Type':{jpg:'image/jpeg',png:'image/png',webp:'image/webp'}[f.split('.').pop()],'Cache-Control':'private, max-age=3600'});return res.end(fs.readFileSync(path.join(DIR,'uploads',f))),'sent'}
  // ---------- ADMIN ----------
@@ -83,8 +86,8 @@ async function api(req,url,body,res){
   if(!['paid','rejected'].includes(body.status))throw new E(400,'Invalid status');w.status=body.status;w.resolvedAt=Date.now();save();return{ok:1}}
  throw new E(404,'Not found')}
 
-const STATIC={'/':'index.html','/index.html':'index.html','/styles.css':'styles.css','/script.js':'script.js','/portal':'portal.html','/portal.html':'portal.html','/portal.css':'portal.css','/portal.js':'portal.js','/data.js':'data.js'};
-const MIME={html:'text/html; charset=utf-8',css:'text/css',js:'text/javascript',svg:'image/svg+xml',jpg:'image/jpeg',png:'image/png',webp:'image/webp'};
+const STATIC={'/robots.txt':'robots.txt','/':'index.html','/index.html':'index.html','/styles.css':'styles.css','/script.js':'script.js','/portal':'portal.html','/portal.html':'portal.html','/portal.css':'portal.css','/portal.js':'portal.js','/data.js':'data.js'};
+const MIME={txt:'text/plain',html:'text/html; charset=utf-8',css:'text/css',js:'text/javascript',svg:'image/svg+xml',jpg:'image/jpeg',png:'image/png',webp:'image/webp'};
 const SEC={'X-Content-Type-Options':'nosniff','X-Frame-Options':'DENY','Referrer-Policy':'same-origin'};
 http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://x');for(const k in SEC)res.setHeader(k,SEC[k]);
  if(url.pathname.startsWith('/api/')){res.setHeader('Cache-Control','no-store');let body={};

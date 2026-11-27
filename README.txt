@@ -23,7 +23,7 @@ Hotspot (Denop Hostel WiFi)
 - 1 Month  : UGX 20,000
 
 ## Design
-Dispatch system: run "node server.js". Staff portal at /portal. Public site at /. UI talks only to data.js (swap for Supabase later).
+Premium ISP site + dispatch portal. Run "node server.js". Site at /, staff portal at /portal. Real photos: add images/pole.jpg, splice.jpg, home.jpg, hotspot.jpg and the "Our work" section appears automatically. Support hours: edit SUPPORT in script.js. Marketer commission (40%) is credited when the installer marks the job done.
 
 ## Fibre Coverage (Now available)
 Kabalagala • Kansanga • Muyenga • Kiwafu • Luwafu • Kitalanga • Soya • Bunga • Kiwempe
