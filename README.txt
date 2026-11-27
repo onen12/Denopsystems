@@ -23,7 +23,7 @@ Hotspot (Denop Hostel WiFi)
 - 1 Month  : UGX 20,000
 
 ## Design
-Fun neo-brutalist makeover. Drop real photos in images/ named pole.jpg, splice.jpg, home.jpg, hotspot.jpg — they replace the illustrations automatically.
+Dispatch system: run "node server.js". Staff portal at /portal. Public site at /
 
 ## Fibre Coverage (Now available)
 Kabalagala • Kansanga • Muyenga • Kiwafu • Luwafu • Kitalanga • Soya • Bunga • Kiwempe
@@ -42,3 +42,12 @@ Still expanding across Kampala — contact us if your area is not listed.
 Alternatively use Netlify, Vercel, GitHub Pages or any static hosting.
 
 WhatsApp form submissions go to 0704 682 970 by default.
+
+== DISPATCH PORTAL ==
+Run:  ADMIN_EMAIL=you@x.com ADMIN_PASSWORD=StrongPass1 node server.js
+Open: http://localhost:3000/portal   (public site: /)
+Roles: marketer (onboards clients, sees own earnings, requests withdrawals),
+       installer (sees only assigned jobs, completes with 2 photos),
+       admin (everything: accounts, dispatch, withdrawals).
+Data is stored in DATA_DIR (default ./data). On Render this needs the persistent disk in render.yaml.
+Marketer commission = 40% of the package price, credited when the client is onboarded.
